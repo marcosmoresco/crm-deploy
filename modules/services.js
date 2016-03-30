@@ -80,7 +80,7 @@ editCatalina = function(issuerIdp) {
 
     var newFile = file.replace(re, replacer);
 
-    save(newFile, process.env.CATALINA_HOME + '/bin/catalina.sh');
+    this.save(newFile, process.env.CATALINA_HOME + '/bin/catalina.sh');
 
   });
 };
