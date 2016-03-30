@@ -1,0 +1,19 @@
+{
+  "name": "crm-deploy",
+  "version": "1.0.0",
+  "description": "Deploy CRM Profiles",
+  "main": "index.js",
+  "author": "Marcos Moresco",
+  "license": "ISC",
+  "bin": {
+    "crm-deploy": "./index.js"
+  },
+  "dependencies": {
+    "commander": "^2.9.0",
+    "fs": "0.0.2",
+    "glob": "^7.0.3",
+    "log4js": "^0.6.33",
+    "shelljs": "^0.6.0",
+    "xml2js": "^0.4.16"
+  }
+}
