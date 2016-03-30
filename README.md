@@ -27,7 +27,7 @@ Alter all configutations( IDP, DATABASE, RULES-ENGINE ... ) for HOM
    
     $ crm-deploy -r
 
-Run tomcat configuration set CATALINA_HOME
+Run tomcat
 
     $ crm-deploy -a -p hom -r
 
