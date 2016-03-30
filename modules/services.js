@@ -35,7 +35,7 @@ save = function(file, filePath) {
 };
 
 editMetadata = function(profile, issuerIdp) {
-  readFile(process.env.HOME + '/workspace/algarcrm/source/environment-conf/' + profile + '/security/metadata_sp.xml').then(function(file) {
+  readFile(process.env.ALGARCRM_WORKSPACE + '/source/environment-conf/' + profile + '/security/metadata_sp.xml').then(function(file) {
     parser.parseString(file, function(err, result) {
 
       //Check if use after
@@ -62,7 +62,7 @@ editMetadata = function(profile, issuerIdp) {
 
       var xml = builder.buildObject(result);
 
-      this.save(xml, process.env.HOME + '/workspace/algarcrm/source/environment-conf/' + profile + '/security/metadata_sp.xml');
+      this.save(xml, process.env.ALGARCRM_WORKSPACE + '/source/environment-conf/' + profile + '/security/metadata_sp.xml');
     });
   });
 };

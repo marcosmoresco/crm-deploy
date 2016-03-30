@@ -40,17 +40,16 @@ for (var i = 0; i < process.argv.length; i++) {
 function all() {
   if (!!program.all) {
     if (!!program.profile) {
-
       //Get profile and issuer
       var res = Services.getProfileAndIssuer(program.profile);
 
       //Create symbolic link bundles
       logger.debug("create symbolic link bundles");
-      shell.exec('ln -sf ' + (process.env.HOME + '/workspace/algarcrm/source/environment-conf/' + res.profile + '/bundles ') + process.env.CATALINA_HOME);
+      shell.exec('ln -sf ' + (process.env.ALGARCRM_WORKSPACE + '/source/environment-conf/' + res.profile + '/bundles ') + process.env.CATALINA_HOME);
 
       //Create symbolic link security
       logger.debug("create symbolic link security");
-      shell.exec('ln -sf ' + (process.env.HOME + '/workspace/algarcrm/source/environment-conf/' + res.profile + '/security ') + process.env.CATALINA_HOME);
+      shell.exec('ln -sf ' + (process.env.ALGARCRM_WORKSPACE + '/source/environment-conf/' + res.profile + '/security ') + process.env.CATALINA_HOME);
 
       //Edit catalina.sh
       Services.editCatalina(res.issuerIdp);
@@ -74,7 +73,7 @@ function file() {
 
         //Create symbolic link security
         logger.debug("create symbolic link security");
-        shell.exec('ln -sf ' + (process.env.HOME + '/workspace/algarcrm/source/environment-conf/' + res.profile + '/security ') + process.env.CATALINA_HOME);
+        shell.exec('ln -sf ' + (process.env.ALGARCRM_WORKSPACE + '/algarcrm/source/environment-conf/' + res.profile + '/security ') + process.env.CATALINA_HOME);
 
         //Edit catalina.sh
         Services.editCatalina(res.issuerIdp);
@@ -91,7 +90,7 @@ function file() {
 
 function build() {
   if (!!program.build) {
-    shell.cd(process.env.HOME + '/workspace/algarcrm/source');
+    shell.cd(process.env.ALGARCRM_WORKSPACE + '/source');
     shell.exec('mvn clean install -Dmaven.test.skip -nsu -Dnpm.skip');
   }
 }
@@ -112,21 +111,21 @@ function module() {
       }
 
     for (var i = 0; i < modules.length; i++) {
-      var checkExistModule = shell.exec('[ -d ' + process.env.HOME + '/workspace/algarcrm/source/modules/' + modules[i] + ' ]').code;
+      var checkExistModule = shell.exec('[ -d ' + process.env.ALGARCRM_WORKSPACE + '/source/modules/' + modules[i] + ' ]').code;
       if (checkExistModule === 0) {
         logger.info('Build module : ' + modules[i]);
-        shell.cd(process.env.HOME + '/workspace/algarcrm/source/modules/' + modules[i]);
+        shell.cd(process.env.ALGARCRM_WORKSPACE + '/source/modules/' + modules[i]);
         shell.exec('mvn clean install -Dmaven.test.skip -nsu -Dnpm.skip');
       } else {
-        var checkExistPlugin = shell.exec('[ -d ' + process.env.HOME + '/workspace/algarcrm/source/plugins/' + modules[i] + ' ]').code;
+        var checkExistPlugin = shell.exec('[ -d ' + process.env.ALGARCRM_WORKSPACE + '/source/plugins/' + modules[i] + ' ]').code;
         if (checkExistPlugin === 0) {
           logger.info('Build plugin : ' + modules[i]);
-          shell.cd(process.env.HOME + '/workspace/algarcrm/source/plugins/' + modules[i]);
+          shell.cd(process.env.ALGARCRM_WORKSPACE + '/source/plugins/' + modules[i]);
           shell.exec('mvn clean install -Dmaven.test.skip -nsu -Dnpm.skip');
         } else {
-          logger.error('Module or Plugin : ' + modules[i] + ', not exist in the paths : [ "' + process.env.HOME + '/workspace/algarcrm/source/modules/"' +
+          logger.error('Module or Plugin : ' + modules[i] + ', not exist in the paths : [ "' + process.env.ALGARCRM_WORKSPACE + '/source/modules/"' +
             ' , "' +
-            process.env.HOME + '/workspace/algarcrm/source/plugins/" ]');
+            process.env.ALGARCRM_WORKSPACE + '/source/plugins/" ]');
         }
       }
     }
@@ -149,21 +148,21 @@ function download() {
       }
 
     for (var i = 0; i < modules.length; i++) {
-      var checkExistModule = shell.exec('[ -d ' + process.env.HOME + '/workspace/algarcrm/source/modules/' + modules[i] + ' ]').code;
+      var checkExistModule = shell.exec('[ -d ' + process.env.ALGARCRM_WORKSPACE + '/source/modules/' + modules[i] + ' ]').code;
       if (checkExistModule === 0) {
         logger.info('Download sources of module : ' + modules[i]);
-        shell.cd(process.env.HOME + '/workspace/algarcrm/source/modules/' + modules[i]);
+        shell.cd(process.env.ALGARCRM_WORKSPACE + '/source/modules/' + modules[i]);
         shell.exec('mvn eclipse:eclipse -DdownloadSources=true -DdownloadJavadocs=true');
       } else {
-        var checkExistPlugin = shell.exec('[ -d ' + process.env.HOME + '/workspace/algarcrm/source/plugins/' + modules[i] + ' ]').code;
+        var checkExistPlugin = shell.exec('[ -d ' + process.env.ALGARCRM_WORKSPACE + '/source/plugins/' + modules[i] + ' ]').code;
         if (checkExistPlugin === 0) {
           logger.info('Download sources of plugin : ' + modules[i]);
-          shell.cd(process.env.HOME + '/workspace/algarcrm/source/plugins/' + modules[i]);
+          shell.cd(process.env.ALGARCRM_WORKSPACE + '/source/plugins/' + modules[i]);
           shell.exec('mvn eclipse:eclipse -DdownloadSources=true -DdownloadJavadocs=true');
         } else {
-          logger.error('Module or Plugin : ' + modules[i] + ', not exist in the paths : [ "' + process.env.HOME + '/workspace/algarcrm/source/modules/"' +
+          logger.error('Module or Plugin : ' + modules[i] + ', not exist in the paths : [ "' + process.env.ALGARCRM_WORKSPACE + '/source/modules/"' +
             ' , "' +
-            process.env.HOME + '/workspace/algarcrm/source/plugins/" ]');
+            process.env.ALGARCRM_WORKSPACE + '/source/plugins/" ]');
         }
       }
     }
@@ -173,7 +172,7 @@ function download() {
 //Build crm-web
 function web() {
   if (!!program.web) {
-    shell.cd(process.env.HOME + '/workspace/algarcrm/source/algarcrm-all/crm-web');
+    shell.cd(process.env.ALGARCRM_WORKSPACE + '/source/algarcrm-all/crm-web');
     shell.exec('mvn clean install -Dmaven.test.skip -nsu');
   }
 }
@@ -184,7 +183,7 @@ function updateComplete() {
   var list = [],
     options = {};
 
-  glob(process.env.HOME + "/workspace/algarcrm/source/plugins/*/", options, function(err, files) {
+  glob(process.env.ALGARCRM_WORKSPACE + '/source/plugins/*/', options, function(err, files) {
 
     //var args = process.argv.slice(2);
     if (err) {
@@ -196,7 +195,7 @@ function updateComplete() {
       list.push(re.exec(files[i])[1]);
     }
 
-    glob(process.env.HOME + "/workspace/algarcrm/source/modules/*/", options, function(err, files) {
+    glob(process.env.ALGARCRM_WORKSPACE + '/source/modules/*/', options, function(err, files) {
 
       //var args = process.argv.slice(2);
       if (err) {
@@ -239,7 +238,7 @@ function update() {
 //Check if createSymbolic
 function symbolic() {
   if (!!program.symbolic) {
-    shell.cd(process.env.HOME + '/workspace/algarcrm/source/pluginsdeploy');
+    shell.cd(process.env.ALGARCRM_WORKSPACE + '/source/pluginsdeploy');
     shell.exec('./symbolic_link.sh');
   }
 }
