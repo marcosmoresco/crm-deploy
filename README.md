@@ -11,25 +11,29 @@
   
 ## Configuration
  
+Set environment ALGARCRM_WORKSPACE to find folders algarcrm
+
     $ export ALGARCRM_WORKSPACE=/home/username/workspace/algarcrm
 
-Set environment ALGARCRM_WORKSPACE to find folders algarcrm   	
+Set environment CATALINA_HOME for your tomcat
 
     $ export CATALINA_HOME=/opt/apache-tomcat-7.0.50
 
-Set environment CATALINA_HOME for your tomcat		
-
 ## Examples
-   
+  
+Alter all configutations( IDP, DATABASE, RULES-ENGINE ... ) for HOM
+
     $ crm-deploy -a -p hom
 
-Alter all configutations( IDP, DATABASE, RULES-ENGINE ... ) for HOM
-   
+Compile modules sales-model and sales		
+  
+    $ crm-deploy -m sales-model sales
+
+Run Tomcat
+	
     $ crm-deploy -r
 
-Run tomcat
+Alter configurations and run tomcat
 
     $ crm-deploy -a -p hom -r
-
-Alter configurations and run tomcat 		
- 	 	  	
+ 		 	 	  	
