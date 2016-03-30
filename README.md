@@ -5,9 +5,9 @@
     $ cd crm-deploy		
     $ sudo npm install -g
 
-## Version
+## Help
 
-    $ crm-deploy --version 	
+    $ crm-deploy -h	
   
 ## Configuration
  
