@@ -1,3 +1,12 @@
 # crm-deploy
 
-# Execute npm start
+## Installation
+
+    $ npm install crm-deploy -g
+
+
+## Version
+
+    $ crm-deploy --version 	
+  
+  	
