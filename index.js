@@ -152,13 +152,13 @@ function download() {
       if (checkExistModule === 0) {
         logger.info('Download sources of module : ' + modules[i]);
         shell.cd(process.env.ALGARCRM_WORKSPACE + '/source/modules/' + modules[i]);
-        shell.exec('mvn eclipse:eclipse -DdownloadSources=true -DdownloadJavadocs=true');
+        shell.exec('mvn eclipse:clean eclipse:eclipse -DdownloadSources=true -DdownloadJavadocs=true');
       } else {
         var checkExistPlugin = shell.exec('[ -d ' + process.env.ALGARCRM_WORKSPACE + '/source/plugins/' + modules[i] + ' ]').code;
         if (checkExistPlugin === 0) {
           logger.info('Download sources of plugin : ' + modules[i]);
           shell.cd(process.env.ALGARCRM_WORKSPACE + '/source/plugins/' + modules[i]);
-          shell.exec('mvn eclipse:eclipse -DdownloadSources=true -DdownloadJavadocs=true');
+          shell.exec('mvn eclipse:clean eclipse:eclipse -DdownloadSources=true -DdownloadJavadocs=true');
         } else {
           logger.error('Module or Plugin : ' + modules[i] + ', not exist in the paths : [ "' + process.env.ALGARCRM_WORKSPACE + '/source/modules/"' +
             ' , "' +
