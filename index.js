@@ -91,7 +91,12 @@ function file() {
 function build() {
   if (!!program.build) {
     shell.cd(process.env.ALGARCRM_WORKSPACE + '/source');
-    shell.exec('mvn clean install -Dmaven.test.skip -nsu -Dnpm.skip');
+    var args = !!process.argv ? process.argv.slice(process.argv.indexOf("-b") + 1) : [];    
+    if (args.length > 0 && args[0] === 'ci') {      
+      shell.exec('mvn clean install -Dmaven.test.skip -nsu -Dnpm.skip -Pci');
+    } else {
+      shell.exec('mvn clean install -Dmaven.test.skip -nsu -Dnpm.skip');
+    }
   }
 }
 
@@ -123,9 +128,17 @@ function module() {
           shell.cd(process.env.ALGARCRM_WORKSPACE + '/source/plugins/' + modules[i]);
           shell.exec('mvn clean install -Dmaven.test.skip -nsu -Dnpm.skip');
         } else {
-          logger.error('Module or Plugin : ' + modules[i] + ', not exist in the paths : [ "' + process.env.ALGARCRM_WORKSPACE + '/source/modules/"' +
-            ' , "' +
-            process.env.ALGARCRM_WORKSPACE + '/source/plugins/" ]');
+          var checkExistModel = shell.exec('[ -d ' + process.env.ALGARCRM_WORKSPACE + '/source/models/' + modules[i] + ' ]').code;
+
+          if (checkExistModel === 0) {
+            logger.info('Download sources of model : ' + modules[i]);
+            shell.cd(process.env.ALGARCRM_WORKSPACE + '/source/models/' + modules[i]);
+            shell.exec('mvn clean install -Dmaven.test.skip -nsu');
+          } else {
+            logger.error('Module, Model or Plugin : ' + modules[i] + ', not exist in the paths : [ "' + process.env.ALGARCRM_WORKSPACE + '/source/modules/"' +
+              ' , "' +
+              process.env.ALGARCRM_WORKSPACE + '/source/plugins/" ]');
+          }
         }
       }
     }
@@ -160,9 +173,18 @@ function download() {
           shell.cd(process.env.ALGARCRM_WORKSPACE + '/source/plugins/' + modules[i]);
           shell.exec('mvn eclipse:clean eclipse:eclipse -DdownloadSources=true -DdownloadJavadocs=true');
         } else {
-          logger.error('Module or Plugin : ' + modules[i] + ', not exist in the paths : [ "' + process.env.ALGARCRM_WORKSPACE + '/source/modules/"' +
-            ' , "' +
-            process.env.ALGARCRM_WORKSPACE + '/source/plugins/" ]');
+          var checkExistModel = shell.exec('[ -d ' + process.env.ALGARCRM_WORKSPACE + '/source/models/' + modules[i] + ' ]').code;
+
+          if (checkExistModel === 0) {
+            logger.info('Download sources of model : ' + modules[i]);
+            shell.cd(process.env.ALGARCRM_WORKSPACE + '/source/models/' + modules[i]);
+            shell.exec('mvn eclipse:clean eclipse:eclipse -DdownloadSources=true -DdownloadJavadocs=true');
+          } else {
+
+            logger.error('Module or Plugin : ' + modules[i] + ', not exist in the paths : [ "' + process.env.ALGARCRM_WORKSPACE + '/source/modules/"' +
+              ' , "' +
+              process.env.ALGARCRM_WORKSPACE + '/source/plugins/" ]');
+          }
         }
       }
     }
@@ -207,24 +229,38 @@ function updateComplete() {
         list.push(re.exec(files[i])[1]);
       }
 
-      var str = '"';
-      for (var j = 0; j < list.length; j++) {
-        str += ' ' + list[j];
-      }
-      str += ' " ';
+      glob(process.env.ALGARCRM_WORKSPACE + '/source/models/*/', options, function(err, files) {
 
-      Services.readFile('/etc/bash_completion.d/crm-deploy').then(function(file) {
-        var regex = /-W[\S\s](.*)--/;
+        //var args = process.argv.slice(2);
+        if (err) {
+          return logger.error(err);
+        }
 
-        var replacer = function(match, p1, offset, string) {
-          return match.replace(p1, str);
-        };
+        for (var i = 0; i < files.length; i++) {
+          var re = /models\/(.*)\//;
+          list.push(re.exec(files[i])[1]);
+        }
 
-        var newFile = file.replace(regex, replacer);
+        var str = '"';
+        for (var j = 0; j < list.length; j++) {
+          str += ' ' + list[j];
+        }
+        str += ' " ';
 
-        Services.save(newFile, '/etc/bash_completion.d/crm-deploy');
+        Services.readFile('/etc/bash_completion.d/crm-deploy').then(function(file) {
+          var regex = /-W[\S\s](.*)--/;
 
-        shell.exec('. /etc/bash_completion.d/crm-deploy');
+          var replacer = function(match, p1, offset, string) {
+            return match.replace(p1, str);
+          };
+
+          var newFile = file.replace(regex, replacer);
+
+          Services.save(newFile, '/etc/bash_completion.d/crm-deploy');
+
+          shell.exec('. /etc/bash_completion.d/crm-deploy');
+
+        });
 
       });
 
