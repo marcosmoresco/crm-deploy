@@ -51,6 +51,10 @@ function all() {
       logger.debug("create symbolic link security");
       shell.exec('ln -sf ' + (process.env.ALGARCRM_WORKSPACE + '/source/environment-conf/' + res.profile + '/security ') + process.env.CATALINA_HOME);
 
+       //Create symbolic link .war
+      logger.debug("create symbolic link .war");      
+      shell.exec('ln -sf ' + (process.env.ALGARCRM_WORKSPACE + '/source/algarcrm/crm-web/target/crm.war ' ) + ( process.env.CATALINA_HOME + '/webapps/crm.war' ) );
+
       //Edit catalina.sh
       Services.editCatalina(res.issuerIdp);
 
