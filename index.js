@@ -99,7 +99,7 @@ function build() {
     if (args.length > 0 && args[0] === 'ci') {      
       shell.exec('mvn clean install -Dmaven.test.skip -nsu -Dnpm.skip -Pci');
     } else {
-      shell.exec('mvn clean install -Dmaven.test.skip -nsu -Dnpm.skip');
+      shell.exec('mvn -T 4 clean install -Dmaven.test.skip -nsu -Dnpm.skip');
     }
   }
 }

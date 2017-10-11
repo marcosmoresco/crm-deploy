@@ -1,7 +1,7 @@
 # crm-deploy
 
 ## Installation
-    $ git checkout https://github.com/marcosmoresco/crm-deploy.git
+    $ git clone https://github.com/marcosmoresco/crm-deploy.git
     $ cd crm-deploy		
     $ sudo npm install -g
 
