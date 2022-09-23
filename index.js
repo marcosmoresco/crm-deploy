@@ -97,9 +97,9 @@ function build() {
     shell.cd(process.env.ALGARCRM_WORKSPACE + '/source');
     var args = !!process.argv ? process.argv.slice(process.argv.indexOf("-b") + 1) : [];    
     if (args.length > 0 && args[0] === 'ci') {      
-      shell.exec('mvn clean install -Dmaven.test.skip -nsu -Dnpm.skip -Pci');
+      shell.exec('mvn clean install -Dmaven.test.skip -nsu -Pci');
     } else {
-      shell.exec('mvn -T 4 clean install -Dmaven.test.skip -nsu -Dnpm.skip');
+      shell.exec('mvn -T 4 clean install -Dmaven.test.skip -nsu');
     }
   }
 }
@@ -124,13 +124,13 @@ function module() {
       if (checkExistModule === 0) {
         logger.info('Build module : ' + modules[i]);
         shell.cd(process.env.ALGARCRM_WORKSPACE + '/source/modules/' + modules[i]);
-        shell.exec('mvn clean install -Dmaven.test.skip -nsu -Dnpm.skip');
+        shell.exec('mvn clean install -Dmaven.test.skip -nsu');
       } else {
         var checkExistPlugin = shell.exec('[ -d ' + process.env.ALGARCRM_WORKSPACE + '/source/plugins/' + modules[i] + ' ]').code;
         if (checkExistPlugin === 0) {
           logger.info('Build plugin : ' + modules[i]);
           shell.cd(process.env.ALGARCRM_WORKSPACE + '/source/plugins/' + modules[i]);
-          shell.exec('mvn clean install -Dmaven.test.skip -nsu -Dnpm.skip');
+          shell.exec('mvn clean install -Dmaven.test.skip -nsu');
         } else {
           var checkExistModel = shell.exec('[ -d ' + process.env.ALGARCRM_WORKSPACE + '/source/models/' + modules[i] + ' ]').code;
 
